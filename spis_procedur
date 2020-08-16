@@ -1,0 +1,44 @@
+quotientGroup := function( G, N )
+isOliver := function( G )
+determineOliverGroupsUpToOrder := function( order )
+frobeniusSchurIndicator := function( chi, G )
+realIrr := function( G )
+realModuleCharacters := function( realModule, G )
+isFaithful := function( realModule, G )
+realModuleDimension := function( realModule, G )
+restrictedTuples := function( restrictions )
+determineModules := function( dim, G )
+fixedPointDimensionIrr := function( ir, H, G )
+fixedPointDimensionRealModule := function( realModule, H, G )
+tableFixedPointDimension := function( G )
+determineIndex2Subgroups := function( G )
+groupByGeneratingSubgroups := function( H1, H2 )
+determineSubgroupTriples := function( G )
+determineRankD := function( G )
+init := function( n, order )
+
+computeModulesNotExcludedOdd := function( G )
+computeModulesNotExcludedOddUpToOrder := function( order )
+computeModulesNotExcludedOne := function( G )
+computeMNOneOliverGroupsUpToOrder := function( n, order )
+
+modulesGivenDimension := [];
+modulesNotExcludedOdd := [];
+groupsExcludedOdd := [];
+modulesNotExcludedOne := [];
+index2Subgroups := [];
+index2SubgroupIntersection := [];
+subgroupTriplesTypeA := [];
+subgroupTriplesTypeB := [];
+rankD := [];
+nontrivialRealIrreduciblesNumber := [];
+oliverGroups := [];
+
+complexEquivalent := NewDictionary( [], true );
+realIrreducibles := [];
+dimensionsRealModules := [];
+realIrrOfDim := [];
+numberRealIrrOfDim := [];
+realIrrNr := NewDictionary( [], true );
+realIrrNrReversed := NewDictionary( 1, true );
+conjugacyClassesSubgroups := NewDictionary( SmallGroup( 1,1 ), true );

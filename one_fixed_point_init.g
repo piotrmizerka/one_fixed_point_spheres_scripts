@@ -11,6 +11,7 @@ subgroupTriplesTypeB := [];
 rankD := [];
 nontrivialRealIrreduciblesNumber := [];
 oliverGroups := [];
+groupsOddList := [];
 
 quotientGroup := function( G, N )
 	return Image( NaturalHomomorphismByNormalSubgroup( G, N ) );
@@ -205,8 +206,8 @@ restrictedTuples := function( restrictions )
 end;
 
 determineModules := function( dim, G )
-	local restrictedPartitions, numberInPartitionDim, n, partition, summand, summands, 
-		  restrictions, set, ir, resTup, restup, unTup, uT, result, realModule, 
+	local restrictedPartitions, numberInPartitionDim, n, partition, summand, summands,
+		  restrictions, set, ir, resTup, restup, unTup, uT, result, realModule,
 		  multiplicities, tempModule, temp, temp2, i, modulesGivenDimensionTemp, groupId;
 	numberInPartitionDim := [];
 	restrictedPartitions := RestrictedPartitions( dim, dimensionsRealModules );
@@ -312,10 +313,22 @@ tableFixedPointDimension := function( G )
 	od;
 	Print( "\n" );
 	for H in ConjugacyClassesSubgroups( G ) do
-		Print( LookupDictionary( conjugacyClassesSubgroups, H ), " = ", 
+		Print( LookupDictionary( conjugacyClassesSubgroups, H ), " = ",
 			   StructureDescription( Representative( H ) ), "\n" );
 	od;
 	Print( "\n\n" );
+end;
+
+SatisfiesProposition29 := function( G )
+	local g, cl;
+	for cl in ConjugacyClasses( G ) do
+		g := Representative( cl );
+		if (IsPrimePowerInt( Order( g ) ) = false and Order( g ) <> 1) or
+			 (IsPrimePowerInt( Order( g ) ) = true and (Order( g ) mod 2) = 0 and Order( g ) > 4) then
+			 return false;
+		fi;
+	od;
+	return true;
 end;
 
 determineIndex2Subgroups := function( G )
@@ -327,12 +340,23 @@ determineIndex2Subgroups := function( G )
 			Add( index2SubgroupsTemp, H );
 		fi;
 	od;
-	index2Subgroups[groupId[1]][groupId[2]] := index2SubgroupsTemp;
+	if (IdGroup( G ) in groupsOddList) = false then
+		Add( groupsOddList, G );
+	fi;
 	if Size( index2SubgroupsTemp ) > 0 then
 		index2SubgroupIntersection[groupId[1]][groupId[2]] := Intersection( index2SubgroupsTemp );
 	else
 		index2SubgroupIntersection[groupId[1]][groupId[2]] := [];
 	fi;
+	index2Subgroups[groupId[1]][groupId[2]] := [];
+	for H in index2SubgroupsTemp do
+		if SatisfiesProposition29( H ) then
+			Add( index2Subgroups[groupId[1]][groupId[2]], H );
+			if (IdGroup( H ) in groupsOddList) = false then
+				Add( groupsOddList, G );
+			fi;
+		fi;
+	od;
 end;
 
 groupByGeneratingSubgroups := function( H1, H2 )
@@ -372,12 +396,15 @@ determineSubgroupTriples := function( G )
 										Add( subgroupTriplesTypeA[groupId[1]][groupId[2]], temp );
 									fi;
 								fi;
-								temp := [];
-								Add( temp, cl1 );
-								Add( temp, cl2 );
-								Add( temp, clP );
-								if ( temp in subgroupTriplesTypeB[groupId[1]][groupId[2]] ) = false then
-									Add( subgroupTriplesTypeB[groupId[1]][groupId[2]], temp );
+								if ((Order(P) mod 2) = 0) or ((Order(H1) mod 2) = 1 and (Order(H2) mod 2) = 1) or
+									 (IsNormal(H1,P) and IsNormal(H2,P) and ((Order(H1)/Order(P)) mod 2 = 1) and ((Order(H1)/Order(P)) mod 2 = 1)) then
+									temp := [];
+									Add( temp, cl1 );
+									Add( temp, cl2 );
+									Add( temp, clP );
+									if ( temp in subgroupTriplesTypeB[groupId[1]][groupId[2]] ) = false then
+										Add( subgroupTriplesTypeB[groupId[1]][groupId[2]], temp );
+									fi;
 								fi;
 							fi;
 						od;
@@ -411,7 +438,7 @@ end;
 
 init := function( n, order )
 	local GOli, groupId, i;
-	
+
 	modulesGivenDimension := [];
 	modulesNotExcludedOdd := [];
 	groupsExcludedOdd := [];
@@ -423,7 +450,8 @@ init := function( n, order )
 	rankD := [];
 	nontrivialRealIrreduciblesNumber := [];
 	oliverGroups := [];
-	
+	groupsOddList := [];
+
 	for i in [60..order] do
 		modulesGivenDimension[i] := [];
 		index2Subgroups[i] := [];
@@ -441,6 +469,7 @@ init := function( n, order )
 		realIrr( GOli );
 		determineModules( n, GOli );
 		determineIndex2Subgroups( GOli );
+		SortBy( groupsOddList, function(v) return v[1]; end );
 		groupId := IdGroup( GOli );
 		nontrivialRealIrreduciblesNumber[groupId[1]][groupId[2]] := Size( realIrreducibles );
 		determineSubgroupTriples( GOli );
