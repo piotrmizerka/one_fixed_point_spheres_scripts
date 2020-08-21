@@ -2,7 +2,7 @@
 
 Read( Filename( [DirectoryDesktop(), DirectoryCurrent()], "one_fixed_point_init.g" ) );
 
-computeModulesNotExcludedOdd := function( G )
+computeModulesNotExcludedOdd := function( G, applyIndex2Strategy )
 	local groupId, V, triple, dimH1, dimH2, dimP, H, i, j, check;
 	groupId := IdGroup( G );
 	realIrr( G );
@@ -35,27 +35,30 @@ computeModulesNotExcludedOdd := function( G )
 		fi;
 		i := i+1;
 	od;
-	for H in index2Subgroups[groupId[1]][groupId[2]] do
-		if H in groupsExcludedOdd then
-			Print( "odd index 2\n" );
-			modulesNotExcludedOdd[groupId[1]][groupId[2]] := [];
-			break;
+	if applyIndex2Strategy = true then
+		for H in index2Subgroups[groupId[1]][groupId[2]] do
+			if H in groupsExcludedOdd then
+				Print( "odd index 2\n" );
+				modulesNotExcludedOdd[groupId[1]][groupId[2]] := [];
+				break;
+			fi;
+		od;
+		if Size( modulesNotExcludedOdd[groupId[1]][groupId[2]] ) = 0 then
+			Print( "odd all excluded\n" );
+			Add( groupsExcludedOdd, G );
 		fi;
-	od;
-	if Size( modulesNotExcludedOdd[groupId[1]][groupId[2]] ) = 0 then
-		Print( "odd all excluded\n" );
-		Add( groupsExcludedOdd, G );
 	fi;
 end;
 
-computeModulesNotExcludedOddGivenList := function( groupList )
+computeModulesNotExcludedOddGivenList := function( groupList, applyIndex2Strategy )
 	local G;
 	for G in groupList do
-		computeModulesNotExcludedOdd( G );
+		Print( "Odd G = ", IdGroup( G ), "\n" );
+		computeModulesNotExcludedOdd( G, applyIndex2Strategy );
 	od;
 end;
 
-computeModulesNotExcludedOne := function( G )
+computeModulesNotExcludedOne := function( G, applyIndex2Strategy )
 	local groupId, V, triple, dimH1, dimH2, dimP, i;
 	groupId := IdGroup( G );
 	realIrr( G );
@@ -74,10 +77,12 @@ computeModulesNotExcludedOne := function( G )
 				break;
 			fi;
 		od;
-		if Size( index2SubgroupIntersection[groupId[1]][groupId[2]] ) > 0 then
-			if fixedPointDimensionRealModule( V, index2SubgroupIntersection[groupId[1]][groupId[2]], G ) > 0 then
-				Print( "one index 2\n" );
-				RemoveSet( modulesNotExcludedOne[groupId[1]][groupId[2]], V );
+		if applyIndex2Strategy = true then
+			if Size( index2SubgroupIntersection[groupId[1]][groupId[2]] ) > 0 then
+				if fixedPointDimensionRealModule( V, index2SubgroupIntersection[groupId[1]][groupId[2]], G ) > 0 then
+					Print( "one index 2\n" );
+					RemoveSet( modulesNotExcludedOne[groupId[1]][groupId[2]], V );
+				fi;
 			fi;
 		fi;
 		i := i+1;
@@ -85,15 +90,49 @@ computeModulesNotExcludedOne := function( G )
 end;
 
 # Main function to call
-computeMNOneOliverGroupsUpToOrder := function( n, order )
-	local GOli;
+computeMNOneOliverGroupsUpToOrder := function( n, order, applyIndex2Strategy, considerFaithful )
+	local GOli, notExcludedModule, idGroup, tempModules;
 	init( n, order );
 	Display(groupsOddList);
-	computeModulesNotExcludedOddGivenList( groupsOddList );
+	computeModulesNotExcludedOddGivenList( groupsOddList2, applyIndex2Strategy );
 	for GOli in oliverGroups do
+		idGroup := IdGroup( GOli );
+		Print( "\nOdd G = ", IdGroup( GOli ), "\n" );
+		Display( modulesNotExcludedOdd[idGroup[1]][idGroup[2]] );
 		if Order( GOli ) <= order then
-			Print( "G = ", IdGroup( GOli ), "\n" );
-			computeModulesNotExcludedOne( GOli );
+			Print( "One G = ", IdGroup( GOli ), "\n" );
+			computeModulesNotExcludedOne( GOli, applyIndex2Strategy );
+			Display( modulesNotExcludedOne[idGroup[1]][idGroup[2]] );
 		fi;
 	od;
+	if considerFaithful = true then
+			for GOli in oliverGroups do
+				idGroup := IdGroup( GOli );
+				tempModules := modulesNotExcludedOne[idGroup[1]][idGroup[2]];
+				modulesNotExcludedOne[idGroup[1]][idGroup[2]] := [];
+				for notExcludedModule in tempModules do
+						if isFaithful( notExcludedModule, GOli ) = true then
+								Add( modulesNotExcludedOne[idGroup[1]][idGroup[2]], notExcludedModule );
+						fi;
+				od;
+				Print( "\nG = ", idGroup, "\n" );
+				Display( modulesNotExcludedOne[idGroup[1]][idGroup[2]] );
+			od;
+	fi;
+end;
+
+faithFulNotExcluded := function()
+		local GOli, notExcludedModule, idGroup, tempModules;
+		for GOli in oliverGroups do
+			idGroup := IdGroup( GOli );
+			tempModules := modulesNotExcludedOne[idGroup[1]][idGroup[2]];
+			modulesNotExcludedOne[idGroup[1]][idGroup[2]] := [];
+			for notExcludedModule in tempModules do
+					if isFaithful( notExcludedModule, GOli ) = true then
+							Add( modulesNotExcludedOne[idGroup[1]][idGroup[2]], notExcludedModule );
+					fi;
+			od;
+			Print( "\nOne faithful G = ", idGroup, "\n" );
+			Display( modulesNotExcludedOne[idGroup[1]][idGroup[2]] );
+		od;
 end;

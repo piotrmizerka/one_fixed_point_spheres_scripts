@@ -12,6 +12,7 @@ rankD := [];
 nontrivialRealIrreduciblesNumber := [];
 oliverGroups := [];
 groupsOddList := [];
+groupsOddList2 := [];
 
 quotientGroup := function( G, N )
 	return Image( NaturalHomomorphismByNormalSubgroup( G, N ) );
@@ -34,11 +35,13 @@ end;
 determineOliverGroupsUpToOrder := function( order )
 	local G, n;
 	for n in [60..order] do
-		for G in AllSmallGroups( n ) do
-			if isOliver( G ) then
-				Add( oliverGroups, G );
-			fi;
-		od;
+		if IsPrimePowerInt( n ) = false then
+			for G in AllSmallGroups( n ) do
+				if isOliver( G ) then
+					Add( oliverGroups, G );
+				fi;
+			od;
+		fi;
 	od;
 end;
 
@@ -258,9 +261,6 @@ determineModules := function( dim, G )
 				fi;
 			od;
 			Add( result, realModule );
-			#if isFaithful( realModule, G ) = true then
-			#	Add( result, realModule );
-			#fi;
 		od;
 	od;
 	modulesGivenDimensionTemp := result;
@@ -341,7 +341,8 @@ determineIndex2Subgroups := function( G )
 		fi;
 	od;
 	if (IdGroup( G ) in groupsOddList) = false then
-		Add( groupsOddList, G );
+		Add( groupsOddList, IdGroup( G ) );
+		Add( groupsOddList2, G );
 	fi;
 	if Size( index2SubgroupsTemp ) > 0 then
 		index2SubgroupIntersection[groupId[1]][groupId[2]] := Intersection( index2SubgroupsTemp );
@@ -353,7 +354,8 @@ determineIndex2Subgroups := function( G )
 		if SatisfiesProposition29( H ) then
 			Add( index2Subgroups[groupId[1]][groupId[2]], H );
 			if (IdGroup( H ) in groupsOddList) = false then
-				Add( groupsOddList, G );
+				Add( groupsOddList, IdGroup( H ) );
+				Add( groupsOddList2, H );
 			fi;
 		fi;
 	od;
@@ -449,8 +451,13 @@ init := function( n, order )
 	subgroupTriplesTypeB := [];
 	rankD := [];
 	nontrivialRealIrreduciblesNumber := [];
-	oliverGroups := [];
+	#oliverGroups := [];
+	oliverGroups := [
+		SmallGroup( 60,5 ), SmallGroup( 72, 42 ), SmallGroup( 72, 43 ), SmallGroup( 72, 44 ),
+		SmallGroup( 120, 5 ), SmallGroup( 120, 34 ), SmallGroup( 120, 35 ), SmallGroup( 126, 9 )
+	];
 	groupsOddList := [];
+	groupsOddList2 := [];
 
 	for i in [60..order] do
 		modulesGivenDimension[i] := [];
@@ -463,7 +470,7 @@ init := function( n, order )
 		modulesNotExcludedOdd[i] := [];
 		modulesNotExcludedOne[i] := [];
 	od;
-	determineOliverGroupsUpToOrder( order );
+	#determineOliverGroupsUpToOrder( order );
 	for GOli in oliverGroups do
 		Print( "Initializing SG", IdGroup( GOli ), " \n" );
 		realIrr( GOli );
