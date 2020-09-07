@@ -8,16 +8,13 @@ Read( Filename( [DirectoryCurrent()], "level_0_functions.g" ) );
 # Suppose V is the irreducible real G-module with character ir.
 # The function below computes the dimension of the fixed point set V^H.
 FixedPointDimensionIrr := function( ir, H, G )
-	local result, h;
-	result := 0;
-	for h in H do
-		result := result+h^ir;
-	od;
-	result := result/Order( H );
-	if FrobeniusSchurIndicator( ir, G ) <> 1 then
-		result := result*2;
-	fi;
-	return result;
+	local result;
+	result := Sum( H, h-> h^ir / Order( H ) )
+    if FrobeniusSchurIndicator( ir, G ) <> 1 then
+        return 2*result;
+    else
+        return result;
+    fi;
 end;
 
 # Let groupList be a list of groups ordered increasingly according to the order.
@@ -30,11 +27,18 @@ end;
 #		of index 2 subgroups of the corresponding group from gropList,
 # - groupsOddList2 - the list of groups containing the groups from groupList and their index 2 subgroups
 #		satisying the assumptions of Proposition 2.9 from [1],
-# - groupsOddList - the SmallGroup library idies of the groups from the list above.
+# - groupsOddListId - the SmallGroup library ids of the groups from the list above.
+
+# TODO: record
+#     gap> r := rec( a := 1, b := 2 );;
+#     gap> r.a;
+#     1
+#     gap> r.b;
+#     2
+
 Index2StrategyData := function( groupList )
 	local index2SubgroupsTemp, H, groupId, G,
-				index2Subgroups, index2SubgroupIntersection, groupsOddList, groupsOddList2,
-				result;
+				index2Subgroups, index2SubgroupIntersection, groupsOddList, groupsOddList2;
 	index2Subgroups := [];
 	index2SubgroupIntersection := [];
 	groupsOddList := [];
@@ -72,13 +76,13 @@ Index2StrategyData := function( groupList )
 			fi;
 		od;
 	od;
-	SortBy( groupsOddList, function(v) return v[1]; end );
-	result := [];
-	result[1] := index2Subgroups;
-	result[2] := index2SubgroupIntersection;
-	result[3] := groupsOddList2;
-	result[4] := groupsOddList;
-	return result;
+	SortBy( groupsOddList, First );
+
+	return [index2Subgroups, index2SubgroupIntersection, groupsOddList2, groupsOddList];
+# 	return rec( index2Subgroups := index2Subgroups,
+#       index2SubgroupIntersection := index2SubgroupIntersection, 
+#       groupsOddList2 := groupsOddList2,
+#       groupsOddListId := groupsOddList );
 end;
 
 # Let G be a group and realModule be a list of pairs representing characters of a given real G-module:
@@ -88,14 +92,13 @@ end;
 #   which occur in realModule.
 # The function below checks whether realModule is faithful.
 IsFaithful := function( realModule, G )
-	local characters, i;
+	local characters;
 	characters := RealModuleCharacters( realModule, G );
-	for i in [2..Size( characters )] do
-		if characters[i] = characters[1] then
-			return false;
-		fi;
-	od;
-	return true;
+    trivialchar := TrivialCharacter( G );
+    
+    # TODO: fix the return statement
+    
+	return not ForAny(characters{[2..Size( characters )]}, chi -> chi = trivialchar );
 end;
 
 # The function below checks whether a group G is an Oliver group. The reference to the algebraic
@@ -207,7 +210,6 @@ RealIrreducibles := function( G )
   complexEquivalent := NewDictionary( [], true );
   realIrrNr := NewDictionary( [], true );
   realIrrNrReversed := NewDictionary( 1, true );
-  result := [];
 	irr := Irr( G );
 	complexIrr := [];
 	considered := [];
@@ -273,11 +275,5 @@ RealIrreducibles := function( G )
 			considered[ir[1]] := true;
 		fi;
 	od;
-  Add( result, realIrreducibles );
-  Add( result, dimensionsRealModules );
-  Add( result, realIrrOfDim );
-  Add( result, complexEquivalent );
-  Add( result, realIrrNr );
-  Add( result, realIrrNrReversed );
-  return result;
+  return [realIrreducibles, dimensionsRealModules, realIrrOfDim, complexEquivalent, realIrrNr, realIrrNrReversed]
 end;

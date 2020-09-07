@@ -10,12 +10,8 @@ Read( Filename( [DirectoryCurrent()], "level_1_functions.g" ) );
 # see the output of RealIrreducibles.
 # The function below computes the dimension of the fixed point set realModule^H.
 FixedPointDimensionRealModule := function( realModule, H, G, complexEquivalent )
-	local result, irrComponent;
-	result := 0;
-	for irrComponent in realModule do
-		result := result+FixedPointDimensionIrr( LookupDictionary( complexEquivalent, irrComponent[1] ), H, G )*irrComponent[2];
-	od;
-	return result;
+	return Sum(realModule, 
+      irrComponent -> FixedPointDimensionIrr( LookupDictionary( complexEquivalent, First(irrComponent)), H, G)*Last(irrComponent));
 end;
 
 # Let G be a group.
