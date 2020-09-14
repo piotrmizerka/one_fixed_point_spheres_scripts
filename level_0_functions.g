@@ -29,7 +29,7 @@ end;
 # The function below computes the values of characters of realModule evaluated on conjugacy classes of G.
 RealModuleCharacters := function( realModule, G )
 	return List( [1..NrConjugacyClasses( G )],
-      idx -> List(realModule, irrComponent -> First(irrComponent)[idx]*Last(irrComponent)) );
+      idx -> Sum(realModule, irrComponent -> First(irrComponent)[idx]*Last(irrComponent)) );
 end;
 
 LexSmallerTuples := function( tuple )

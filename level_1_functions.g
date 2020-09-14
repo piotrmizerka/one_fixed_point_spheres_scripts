@@ -91,14 +91,18 @@ end;
 # - the second coordinate of the i-th pair is the number of copies of the i-th irreducible real G-module
 #   which occur in realModule.
 # The function below checks whether realModule is faithful.
+
 IsFaithful := function( realModule, G )
-	local characters;
-	characters := RealModuleCharacters( realModule, G );
-    trivialchar := TrivialCharacter( G );
-    
-    # TODO: fix the return statement
-    
-	return not ForAny(characters{[2..Size( characters )]}, chi -> chi = trivialchar );
+	local character_values;
+	character_values := RealModuleCharacters( realModule, G );
+
+    for i in [2..Size( character_values )] do
+		if character_values[i] = character_values[1] then
+			return false;
+		fi;
+	od;
+	return true;
+
 end;
 
 # The function below checks whether a group G is an Oliver group. The reference to the algebraic
