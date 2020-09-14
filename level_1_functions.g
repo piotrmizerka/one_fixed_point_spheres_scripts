@@ -36,54 +36,71 @@ end;
 #     gap> r.b;
 #     2
 
-Index2StrategyData := function( groupList )
-	local index2SubgroupsTemp, H, groupId, G,
-				index2Subgroups, index2SubgroupIntersection, groupsOddList, groupsOddList2;
-	index2Subgroups := [];
-	index2SubgroupIntersection := [];
-	groupsOddList := [];
-	groupsOddList2 := [];
-	for G in groupList do
-		groupId := IdGroup( G );
-		index2Subgroups[groupId[1]] := [];
-		index2SubgroupIntersection[groupId[1]] := [];
-	od;
-	for G in groupList do
-		index2SubgroupsTemp := [];
-		groupId := IdGroup( G );
-		for H in NormalSubgroups( G ) do
-			if Order( G )/Order( H ) = 2 then
-				Add( index2SubgroupsTemp, H );
-			fi;
-		od;
-		if (IdGroup( G ) in groupsOddList) = false then
-			Add( groupsOddList, IdGroup( G ) );
-			Add( groupsOddList2, G );
-		fi;
-		if Size( index2SubgroupsTemp ) > 0 then
-			index2SubgroupIntersection[groupId[1]][groupId[2]] := Intersection( index2SubgroupsTemp );
-		else
-			index2SubgroupIntersection[groupId[1]][groupId[2]] := [];
-		fi;
-		index2Subgroups[groupId[1]][groupId[2]] := [];
-		for H in index2SubgroupsTemp do
-			if SatisfiesProposition29( H ) then
-				Add( index2Subgroups[groupId[1]][groupId[2]], H );
-				if (IdGroup( H ) in groupsOddList) = false then
-					Add( groupsOddList, IdGroup( H ) );
-					Add( groupsOddList2, H );
-				fi;
-			fi;
-		od;
-	od;
-	SortBy( groupsOddList, First );
 
-	return [index2Subgroups, index2SubgroupIntersection, groupsOddList2, groupsOddList];
-# 	return rec( index2Subgroups := index2Subgroups,
-#       index2SubgroupIntersection := index2SubgroupIntersection, 
-#       groupsOddList2 := groupsOddList2,
-#       groupsOddListId := groupsOddList );
+IndexTwoNormalSubgroups := function( G )
+    result Filtered(MaximalNormalSubgroups( G ), H -> IndexNC( G, H ) == 2);
 end;
+
+Index2StrategyData_new := function( groupList )
+    local d, unique_subgroups;
+    d := NewDictionary( [1,1], true);
+    unique_subgroups := Set([]);
+    for G in groupList do
+        AddDictionary(d, GroupId( G ), IndexTwoNormalSubgroups( G ));
+        unique_subgroups := UniteSet(unique_subgroups, 
+          Filtered(LookupDictionary(d, GroupId( G )), H -> SatisfiesProposition29( H ) );
+    od;
+    return rec(dictionary := d, subgroups := unique_subgroups);
+end;
+
+
+#  Index2StrategyData := function( groupList )
+#  	local index2SubgroupsTemp, H, groupId, G,
+#  				index2Subgroups, index2SubgroupIntersection, groupsOddList, groupsOddList2;
+#  	index2Subgroups := [];
+#  	index2SubgroupIntersection := [];
+#  	groupsOddList := [];
+#  	groupsOddList2 := [];
+#  	for G in groupList do
+#  		groupId := IdGroup( G );
+#  		index2Subgroups[groupId[1]] := [];
+#  		index2SubgroupIntersection[groupId[1]] := [];
+#  		
+#  		index2SubgroupsTemp := IndexTwoNormalSubgroups( G );
+#  
+#  		if (IdGroup( G ) in groupsOddList) = false then
+#  			Add( groupsOddList, IdGroup( G ) );
+#  			Add( groupsOddList2, G );
+#  		fi;
+#  		
+#  		if Size( index2SubgroupsTemp ) > 0 then
+#  			index2SubgroupIntersection[groupId[1]][groupId[2]] := Intersection( index2SubgroupsTemp );
+#  		else
+#  			index2SubgroupIntersection[groupId[1]][groupId[2]] := [];
+#  		fi;
+#  		
+#  		index2Subgroups[groupId[1]][groupId[2]] := [];
+#  		for H in index2SubgroupsTemp do
+#  			if SatisfiesProposition29( H ) then
+#  				Add( index2Subgroups[groupId[1]][groupId[2]], H );
+#  				if (IdGroup( H ) in groupsOddList) = false then
+#  					Add( groupsOddList, IdGroup( H ) );
+#  					Add( groupsOddList2, H );
+#  				fi;
+#  			fi;
+#  		od;
+#  	od;
+#  	SortBy( groupsOddList, First );
+#  
+#  	return [index2Subgroups, index2SubgroupIntersection, groupsOddList2, groupsOddList];
+#  	Dictionary (rząd, id) -> ( lista grup, intersection/lista pusta)
+#  
+#    [ lista: rząd -> lista: id -> lista grup]
+#    [ lista: rząd -> lista: id -> grupa/l. pusta] Intersections
+#    [ lista grup ]
+#    [ lista group id (pary)]
+#    
+#  end;
 
 # Let G be a group and realModule be a list of pairs representing characters of a given real G-module:
 # - the first coordinate of the i-th pair is the list of characters evaluated on conjugacy classes of G
