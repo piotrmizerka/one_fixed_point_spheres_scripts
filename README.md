@@ -1,1 +1,0 @@
-# one_fixed_point_spheres_scripts
