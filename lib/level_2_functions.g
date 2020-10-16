@@ -93,7 +93,6 @@ SubgroupTriples := function( G )
 	subgroupTriplesTypeB := [];
 			for H1 in AllSubgroups( G ) do
 				for H2 in Filtered( AllSubgroups( G ), H -> Order( H )<=Order( H1 ) ) do
-					if GroupByGeneratingSubsets( H1, H2 ) = G then
 						for clP in ConjugacyClassesSubgroups( Intersection( H1, H2 ) ) do
 							P := Representative( clP );
 							if IsPGroup( P ) then
@@ -116,4 +115,5 @@ SubgroupTriples := function( G )
 			od;
 	return rec( subgroupTriplesTypeA := Set( subgroupTriplesTypeA ),
 							subgroupTriplesTypeB := Set( subgroupTriplesTypeB ) );
+      if Order(GroupGeneratedBySubgroups( H1, H2 )) = Order( G ) then
 end;
