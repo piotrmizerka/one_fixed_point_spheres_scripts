@@ -84,32 +84,41 @@ end;
 # Remark: the order in the triples is different than in my PhD thesis - the first
 # and the third component are switched.
 SubgroupTriples := function( G )
-	local subgroupTriplesTypeA, subgroupTriplesTypeB, H1, H2, clP, P;
-	subgroupTriplesTypeA := [];
-	subgroupTriplesTypeB := [];
-			for H1 in AllSubgroups( G ) do
-				for H2 in Filtered( AllSubgroups( G ), H -> Order( H )<=Order( H1 ) ) do
-						for clP in ConjugacyClassesSubgroups( Intersection( H1, H2 ) ) do
-							P := Representative( clP );
-							if IsPGroup( P ) then
-								if ( IsOliver( H1 ) = false ) and ( IsOliver( H2 ) = false ) then
-									Add( subgroupTriplesTypeA, Immutable( [ConjugacyClassSubgroups( G, H1 ),
-																												 ConjugacyClassSubgroups( G, H2 ),
-																												 ConjugacyClassSubgroups( G, P )] ) );
-								fi;
-								if (Order( P ) mod 2) = 0 or ((Order( H1 ) mod 2) = 1 and (Order( H2 ) mod 2) = 1) or
-									 (IsNormal( H1, P ) and IsNormal( H2, P ) and (IndexNC( H1, P ) mod 2 = 1) and
-									   (IndexNC( H2, P ) mod 2 = 1)) then
-									Add( subgroupTriplesTypeB, Immutable( [ConjugacyClassSubgroups( G, H1 ),
-																												 ConjugacyClassSubgroups( G, H2 ),
-																												 ConjugacyClassSubgroups( G, P )] ) );
-								fi;
-							fi;
-						od;
-					fi;
-				od;
-			od;
-	return rec( subgroupTriplesTypeA := Set( subgroupTriplesTypeA ),
-							subgroupTriplesTypeB := Set( subgroupTriplesTypeB ) );
+  local subgroupTriplesTypeA, subgroupTriplesTypeB, H1, H2, clP, P;
+  subgroupTriplesTypeA := [];
+  subgroupTriplesTypeB := [];
+  for H1 in AllSubgroups( G ) do
+    for H2 in Filtered( AllSubgroups( G ), H -> Order( H )<=Order( H1 ) ) do
       if Order(GroupGeneratedBySubgroups( H1, H2 )) = Order( G ) then
+        for clP in ConjugacyClassesSubgroups( Intersection( H1, H2 ) ) do
+          P := Representative( clP );
+          if IsPGroup( P ) then
+            if not IsOliver( H1 ) and not IsOliver( H2 ) then
+              Add(
+                subgroupTriplesTypeA,
+                Immutable( [ConjugacyClassSubgroups( G, H1 ),
+                            ConjugacyClassSubgroups( G, H2 ),
+                            ConjugacyClassSubgroups( G, P )] )
+              );
+            fi;
+            if IsEvenInt( Order( P ) ) or
+              (IsOddInt( Order( H1 ) ) and IsOddInt( Order( H2 ) )) or
+              (IsNormal( H1, P ) and IsNormal( H2, P ) and IsOddInt( IndexNC( H1, P ) )) and
+              IsOddInt( IndexNC( H2, P ) ) then
+                Add(
+                  subgroupTriplesTypeB,
+                  Immutable( [ConjugacyClassSubgroups( G, H1 ),
+                              ConjugacyClassSubgroups( G, H2 ),
+                              ConjugacyClassSubgroups( G, P )] )
+                );
+            fi;
+          fi;
+        od;
+      fi;
+    od;
+  od;
+  return rec(
+    subgroupTriplesTypeA := Set( subgroupTriplesTypeA ),
+    subgroupTriplesTypeB := Set( subgroupTriplesTypeB )
+  );
 end;
