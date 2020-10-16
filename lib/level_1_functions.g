@@ -48,11 +48,12 @@ end;
 # - P and G/H are groups of prime power order (possibly one),
 # - H/P is cyclic.
 IsOliver := function( G )
-	local N, H;
+	local N, H, idx;
 	for H in NormalSubgroups( G ) do
-		if IsPrimePowerInt( Order( G )/ Order( H ) ) or Order( G ) = Order( H ) then
+		idx := IndexNC( G, H )
+		if IsPrimePowerInt( idx ) or IsOne( idx ) then
 			for N in NormalSubgroups( H ) do
-				if IsPGroup( N ) and IsCyclic( QuotientGroup( H, N ) ) then
+				if IsPGroup( N ) and IsCyclic( H/N ) then
 					return false;
 				fi;
 			od;

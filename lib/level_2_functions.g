@@ -67,17 +67,13 @@ end;
 
 # The function below computes all the Oliver groups of orders up to a given order.
 OliverGroupsUpToOrder := function( order )
-	local G, n, result;
+  local G, n, result;
   result := [];
-	for n in [60..order] do
-		if IsPrimePowerInt( n ) = false then
-			for G in AllSmallGroups( n ) do
-				if IsOliver( G ) then
-					Add( result, G );
-				fi;
-			od;
-		fi;
-	od;
+  for n in [60..order] do
+    if not IsPrimePowerInt( n ) then
+      Append( result, Filtered( AllSmallGroups( n ), IsOliver ) );
+    fi;
+  od;
   return result;
 end;
 
