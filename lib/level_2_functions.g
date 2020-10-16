@@ -109,10 +109,9 @@ SubgroupTriples := function( G )
                             ConjugacyClassSubgroups( G, P )] )
               );
             fi;
-            if IsEvenInt( Order( P ) ) or
+            if IsEvenInt( Order( P ) ) or # ie. order(P)=2^k since we know that P is prime power group
               (IsOddInt( Order( H1 ) ) and IsOddInt( Order( H2 ) )) or
-              (IsNormal( H1, P ) and IsNormal( H2, P ) and IsOddInt( IndexNC( H1, P ) )) and
-              IsOddInt( IndexNC( H2, P ) ) then
+              (IsNormal( H1, P ) and IsNormal( H2, P ) and IsOddInt( IndexNC( H1, P ) ) and IsOddInt( IndexNC( H2, P ) )) then
                 Add(
                   subgroupTriplesTypeB,
                   Immutable( [ConjugacyClassSubgroups( G, H1 ),
