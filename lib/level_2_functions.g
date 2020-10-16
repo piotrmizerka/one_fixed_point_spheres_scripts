@@ -10,10 +10,10 @@ Read( Filename( [DirectoryCurrent()], "level_1_functions.g" ) );
 # see the output of RealIrreducibles.
 # The function below computes the dimension of the fixed point set realModule^H.
 FixedPointDimensionRealModule := function( realModule, H, G, complexEquivalent )
-	return Sum( realModule,
-	 						irrComponent -> FixedPointDimensionIrr( LookupDictionary( complexEquivalent,
-																																				irrComponent[1] ), H, G )
-															*irrComponent[2] );
+  return Sum( realModule,
+    irrComponent -> FixedPointDimensionIrr(
+      LookupDictionary( complexEquivalent, irrComponent[1] ), H, G ) * irrComponent[2]
+    );
 end;
 
 # The function below computes the list of real G-modules of dimension dim.
@@ -42,10 +42,12 @@ ModulesGivenDimension := function( dim, G )
     od;
     restrictions := [];
     unorderedTuples := [];
-		summands := Set( partition );
+    summands := Set( partition );
     for summand in summands do
-      unorderedTuples[summand] := UnorderedTuples( realIrr.realIrrOfDim[summand],
-																									 summandOccurrencesInGivenPartition[summand] );
+      unorderedTuples[summand] := UnorderedTuples(
+        realIrr.realIrrOfDim[summand],
+        summandOccurrencesInGivenPartition[summand]
+      );
       Add( restrictions, Size( unorderedTuples[summand] ) );
     od;
     for restup in LexSmallerTuples( restrictions ) do
@@ -56,10 +58,16 @@ ModulesGivenDimension := function( dim, G )
           multiplicities[temp] := multiplicities[temp]+1;
         od;
       od;
-      Add( result, Filtered( List( [1..Size( realIrr.realIrreducibles )],
-			 															i -> [LookupDictionary( realIrr.realIrrNrReversed, i ),
-                                                            multiplicities[i]] ),
-															x -> x[2]>0 ) );
+      Add(
+        result,
+        Filtered(
+          List(
+            [1..Size( realIrr.realIrreducibles )],
+            i -> [LookupDictionary( realIrr.realIrrNrReversed, i ), multiplicities[i]]
+          ),
+          x -> x[2]>0
+        )
+      );
     od;
   od;
   return result;
