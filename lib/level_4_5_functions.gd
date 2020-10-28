@@ -1,0 +1,2 @@
+DeclareGlobalFunction( "OFPModulesNotExcludedOdd" );
+DeclareGlobalFunction( "OFPModulesNotExcludedOneOliverGroupsUpToOrder" );

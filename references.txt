@@ -1,4 +1,4 @@
 [1] Morimoto, M. and Tamura, S.,
     Spheres not admitting smooth odd-fixed-point actions of $S_5$ and $SL(2,5)$,
     Osaka J. Math., 57 (2020), 1-8
-[2] 
+[2] Mizerka, P., Excluding and constructing of exotic group actions on spheres, PhD thesis, Poznań, 2020

@@ -1,9 +1,3 @@
-# To load this file from the project directory (assuming GAP is launched in this directory), call
-# Read( Filename( [DirectoryCurrent()], "level_4_5_functions.g" ) );
-
-Read( Filename( [DirectoryCurrent()], "level_3_functions.g" ) );
-
-
 # Level 4 function.
 # Let G be a group.
 # The function below computes the list MN_odd( givenDim, G ) of real G-modules - for the explanation,
@@ -13,21 +7,22 @@ Read( Filename( [DirectoryCurrent()], "level_3_functions.g" ) );
 # - modulesGivenDimension - the list of real G-modules of given (implicitly) dimension,
 # - groupsExcludedOdd - the list of groups (intentionally not admitting one fixed point acgtions on spheres),
 # - subgroupTriples - the output of SubgroupTriples( G ).
-ModulesNotExcludedOdd := function( G, modulesGivenDimension, groupsExcludedOdd, subgroupTriples )
-	local realModule, triple, dimH1, dimH2, dimP, H, check, realIrr, rankD, result;
-	for H in Index2SubgroupsSatisfyingProposition29( G ) do
+InstallGlobalFunction( OFPModulesNotExcludedOdd,
+                      function( G, modulesGivenDimension, groupsExcludedOdd, subgroupTriples )
+  local realModule, triple, dimH1, dimH2, dimP, H, check, realIrr, rankD, result;
+	for H in OFPIndex2SubgroupsSatisfyingProposition29( G ) do
 		if H in groupsExcludedOdd then
 			return [];
 		fi;
 	od;
-	realIrr := RealIrreducibles( G );
-	rankD := RankD( G, realIrr.realIrreducibles, realIrr.complexEquivalent );
+	realIrr := OFPRealIrreducibles( G );
+	rankD := OFPRankD( G, realIrr.realIrreducibles, realIrr.complexEquivalent );
 	result := Set( modulesGivenDimension );
 	for realModule in modulesGivenDimension do
 		check := false;
 		for triple in subgroupTriples.subgroupTriplesTypeA do
-			if FixedPointDimensionRealModule( realModule, Representative( triple[3] ),
-                                        G, realIrr.complexEquivalent ) = 0 then
+			if OFPFixedPointDimensionRealModule( realModule, Representative( triple[3] ),
+																				G, realIrr.complexEquivalent ) = 0 then
 				RemoveSet( result, realModule );
 				check := true;
 				break;
@@ -35,12 +30,12 @@ ModulesNotExcludedOdd := function( G, modulesGivenDimension, groupsExcludedOdd, 
 		od;
 		if check = false and rankD = Size( realIrr.realIrreducibles ) then
 			for triple in subgroupTriples.subgroupTriplesTypeB do
-				dimH1 := FixedPointDimensionRealModule( realModule, Representative( triple[1] ),
-                                                G, realIrr.complexEquivalent );
-				dimH2 := FixedPointDimensionRealModule( realModule, Representative( triple[2] ),
-                                                G, realIrr.complexEquivalent );
-				dimP := FixedPointDimensionRealModule( realModule, Representative( triple[3] ),
-                                               G, realIrr.complexEquivalent );
+				dimH1 := OFPFixedPointDimensionRealModule( realModule, Representative( triple[1] ),
+																								G, realIrr.complexEquivalent );
+				dimH2 := OFPFixedPointDimensionRealModule( realModule, Representative( triple[2] ),
+																								G, realIrr.complexEquivalent );
+				dimP := OFPFixedPointDimensionRealModule( realModule, Representative( triple[3] ),
+																								G, realIrr.complexEquivalent );
 				if dimH1+dimH2 = dimP and dimH1*dimH2 > 0 then
 					RemoveSet( result, realModule );
 					break;
@@ -49,7 +44,7 @@ ModulesNotExcludedOdd := function( G, modulesGivenDimension, groupsExcludedOdd, 
 		fi;
 	od;
 	return result;
-end;
+end );
 
 # Level 5 function - the main function to call.
 # For all Oliver groups up to a given order, computes the list of modules for which
@@ -67,47 +62,47 @@ end;
 # - faithfulModulesNotExcludedOne - the list of sublists of the lists above containing faithful modules,
 # - modulesGivenDimension - a two dimensional table - in the groupId index contains all the modules
 #		of dimension dim.
-ModulesNotExcludedOneOliverGroupsUpToOrder := function( dim, order )
-	local G, notExcludedModule, idGroup, oliverGroups, subgroupTriples, modulesGivenDimension,
-				modulesNotExcludedOdd, groupsExcludedOdd, modulesNotExcludedOne, faithfulModulesNotExcludedOne;
+InstallGlobalFunction( OFPModulesNotExcludedOneOliverGroupsUpToOrder, function( dim, order )
+  local G, notExcludedModule, idGroup, oliverGroups, subgroupTriples, modulesGivenDimension,
+        modulesNotExcludedOdd, groupsExcludedOdd, modulesNotExcludedOne, faithfulModulesNotExcludedOne;
 
-	modulesNotExcludedOdd := List( [1..order], i -> [] );
-	modulesNotExcludedOne := List( [1..order], i -> [] );
-	faithfulModulesNotExcludedOne := List( [1..order], i -> [] );
+  modulesNotExcludedOdd := List( [1..order], i -> [] );
+  modulesNotExcludedOne := List( [1..order], i -> [] );
+  faithfulModulesNotExcludedOne := List( [1..order], i -> [] );
   modulesGivenDimension := List( [1..order], i -> [] );
 
-  oliverGroups := OliverGroupsUpToOrder( order );
+  oliverGroups := OFPOliverGroupsUpToOrder( order );
   subgroupTriples := List( [1..order], i -> [] );
 
-	# Computing modules not excluded odd ###############################
-	groupsExcludedOdd := [];
-	for G in oliverGroups do
-		idGroup := IdGroup( G );
-    modulesGivenDimension[idGroup[1]][idGroup[2]] := ModulesGivenDimension( dim, G );
-    subgroupTriples[idGroup[1]][idGroup[2]] := SubgroupTriples( G );
-		modulesNotExcludedOdd[idGroup[1]][idGroup[2]] := ModulesNotExcludedOdd(
-			G, modulesGivenDimension[idGroup[1]][idGroup[2]],
+  # Computing modules not excluded odd ###############################
+  groupsExcludedOdd := [];
+  for G in oliverGroups do
+    idGroup := IdGroup( G );
+    modulesGivenDimension[idGroup[1]][idGroup[2]] := OFPModulesGivenDimension( dim, G );
+    subgroupTriples[idGroup[1]][idGroup[2]] := OFPSubgroupTriples( G );
+    modulesNotExcludedOdd[idGroup[1]][idGroup[2]] := OFPModulesNotExcludedOdd(
+      G, modulesGivenDimension[idGroup[1]][idGroup[2]],
       groupsExcludedOdd, subgroupTriples[idGroup[1]][idGroup[2]] );
-		if Size( modulesNotExcludedOdd[idGroup[1]][idGroup[2]] ) = 0 then
-				Add( groupsExcludedOdd, G );
-		fi;
-	od;
-	####################################################################
+    if Size( modulesNotExcludedOdd[idGroup[1]][idGroup[2]] ) = 0 then
+      Add( groupsExcludedOdd, G );
+    fi;
+  od;
+  ####################################################################
 
   # Computing modules not excluded one ###############################
-	for G in oliverGroups do
-		idGroup := IdGroup( G );
-		modulesNotExcludedOne[idGroup[1]][idGroup[2]] := ModulesNotExcludedOne(
-			G, modulesNotExcludedOdd[idGroup[1]][idGroup[2]],
-			subgroupTriples[idGroup[1]][idGroup[2]].subgroupTriplesTypeB );
-		faithfulModulesNotExcludedOne[idGroup[1]][idGroup[2]] := Filtered(
+  for G in oliverGroups do
+    idGroup := IdGroup( G );
+    modulesNotExcludedOne[idGroup[1]][idGroup[2]] := OFPModulesNotExcludedOne(
+    G, modulesNotExcludedOdd[idGroup[1]][idGroup[2]],
+    subgroupTriples[idGroup[1]][idGroup[2]].subgroupTriplesTypeB );
+    faithfulModulesNotExcludedOne[idGroup[1]][idGroup[2]] := Filtered(
       modulesNotExcludedOne[idGroup[1]][idGroup[2]],
-        notExcludedModule -> IsFaithful( notExcludedModule, G ) );
-	od;
+      notExcludedModule -> OFPIsFaithful( notExcludedModule, G ) );
+  od;
   ####################################################################
 
   return rec( modulesNotExcludedOne := modulesNotExcludedOne,
               modulesNotExcludedOdd := modulesNotExcludedOdd,
               faithfulModulesNotExcludedOne := faithfulModulesNotExcludedOne,
               modulesGivenDimension := modulesGivenDimension );
-end;
+end );
