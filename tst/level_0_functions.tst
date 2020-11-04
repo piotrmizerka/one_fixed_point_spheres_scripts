@@ -193,6 +193,36 @@ gap> OFPLexSmallerTuples( [2,3] );
 gap> OFPLexSmallerTuples( [1,1,1] );
 [ [ 1, 1, 1 ] ]
 
+# OFPModuleKernel test
+gap> C8 := CyclicGroup( 8 );;
+gap> Display( CharacterTable( C8 ) );
+CT3
+
+     2  3   3  3  3   3   3  3   3
+
+       1a  8a 4a 2a  8b  8c 4b  8d
+
+X.1     1   1  1  1   1   1  1   1
+X.2     1  -1  1  1  -1  -1  1  -1
+X.3     1   A -1  1  -A   A -1  -A
+X.4     1  -A -1  1   A  -A -1   A
+X.5     1   B  A -1 -/B  -B -A  /B
+X.6     1  -B  A -1  /B   B -A -/B
+X.7     1 -/B -A -1   B  /B  A  -B
+X.8     1  /B -A -1  -B -/B  A   B
+
+A = E(4)
+  = Sqrt(-1) = i
+B = E(8)
+gap> StructureDescription( OFPModuleKernel( [[[1,-1,1,1,-1,0,1,-1],1]], C8 ) );
+"C4"
+gap> StructureDescription( OFPModuleKernel( [[[1,-1,1,1,-1,0,1,1],1]], C8 ) );
+"C8"
+gap> StructureDescription( OFPModuleKernel( [[[1,-1,-1,1,-1,0,-1,-1],1]], C8 ) );
+"C2"
+gap> StructureDescription( OFPModuleKernel( [[[1,-1,-1,-1,-1,0,-1,-1],1]], C8 ) );
+"1"
+
 # OFPRealModuleCharacters test
 gap> OFPRealModuleCharacters( [[[1,1,1],1]], CyclicGroup( 3 ) );
 [ 1, 1, 1 ]
