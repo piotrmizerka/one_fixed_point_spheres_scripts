@@ -1,7 +1,7 @@
 # Level 4 function.
 # Let G be a group.
 # The function below computes the list MN_odd( givenDim, G ) of real G-modules - for the explanation,
-# see my PhD thesis [2], ODNOSNIK. We know that the modules in that list cannot occur at tangent
+# see my PhD thesis [2], p. 43. We know that the modules in that list cannot occur at tangent
 # spaces at fixed point for odd fixed point actions of G on spheres of the same dimension dim.
 # Apart from dim and G, the additional parameters are:
 # - modulesGivenDimension - the list of real G-modules of given (implicitly) dimension,
@@ -63,8 +63,9 @@ end );
 # - modulesGivenDimension - a two dimensional table - in the groupId index contains all the modules
 #		of dimension dim.
 InstallGlobalFunction( OFPModulesNotExcludedOneOliverGroupsUpToOrder, function( dim, order )
-  local G, notExcludedModule, idGroup, oliverGroups, subgroupTriples, modulesGivenDimension,
-        modulesNotExcludedOdd, groupsExcludedOdd, modulesNotExcludedOne, faithfulModulesNotExcludedOne;
+  local G, notExcludedModule, idGroup, idGroup2, oliverGroups, subgroupTriples, modulesGivenDimension,
+        modulesNotExcludedOdd, groupsExcludedOdd, modulesNotExcludedOne, faithfulModulesNotExcludedOne,
+        quotientGroup;
 
   modulesNotExcludedOdd := List( [1..order], i -> [] );
   modulesNotExcludedOne := List( [1..order], i -> [] );
@@ -89,7 +90,7 @@ InstallGlobalFunction( OFPModulesNotExcludedOneOliverGroupsUpToOrder, function( 
   od;
   ####################################################################
 
-  # Computing modules not excluded one ###############################
+  # Computing modules not excluded one - first stage ##################
   for G in oliverGroups do
     idGroup := IdGroup( G );
     modulesNotExcludedOne[idGroup[1]][idGroup[2]] := OFPModulesNotExcludedOne(
@@ -98,6 +99,24 @@ InstallGlobalFunction( OFPModulesNotExcludedOneOliverGroupsUpToOrder, function( 
     faithfulModulesNotExcludedOne[idGroup[1]][idGroup[2]] := Filtered(
       modulesNotExcludedOne[idGroup[1]][idGroup[2]],
       notExcludedModule -> OFPIsFaithful( notExcludedModule, G ) );
+  od;
+  ####################################################################
+
+  # Computing modules not excluded one - second stage - using the information
+  # about the excluded faithful modules ##################################
+  for G in oliverGroups do
+    idGroup := IdGroup( G );
+    for notExcludedModule in Immutable( modulesNotExcludedOne[idGroup[1]][idGroup[2]] ) do
+      quotientGroup := G/OFPModuleKernel( notExcludedModule, G );
+      if OFPIsOliver( quotientGroup ) then
+        idGroup2 := IdGroup( quotientGroup );
+        if Size( faithfulModulesNotExcludedOne[idGroup2[1]][idGroup2[2]] ) = 0 then
+          RemoveSet( modulesNotExcludedOne[idGroup[1]][idGroup[2]], notExcludedModule );
+        fi;
+      else
+        RemoveSet( modulesNotExcludedOne[idGroup[1]][idGroup[2]], notExcludedModule );
+      fi;
+    od;
   od;
   ####################################################################
 
