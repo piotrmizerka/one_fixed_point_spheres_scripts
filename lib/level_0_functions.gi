@@ -64,6 +64,29 @@ end );
 #   of the i-th irreducible real G-module,
 # - the second entry of the i-th pair is the multiplicity of the i-th irreducible real G-module
 #   in realModule.
+# The function below computes the normal subgroup of G which is the kernel of realModule.
+InstallGlobalFunction( OFPModuleKernel, function( realModule, G )
+  local classesTrivialAction, cl, i, moduleDimension;
+  classesTrivialAction := [];
+  moduleDimension := Sum( realModule, component -> component[1][1]*component[2] );
+  i := 1;
+  for cl in ConjugacyClasses( G ) do
+    if Sum( realModule, component -> component[1][i]*component[2] ) = moduleDimension then
+      Add( classesTrivialAction, cl );
+      if i = 1 then
+        Add( classesTrivialAction, cl ); # add twice the same class in order not to take union of a single set
+      fi;
+    fi;
+    i := i+1;
+  od;
+  return Group( Union( classesTrivialAction ) );
+end );
+
+# Let G be a group and realModule be a list of pairs representing characters of a given real G-module:
+# - the first entry of the i-th pair is the list of characters evaluated on conjugacy classes of G
+#   of the i-th irreducible real G-module,
+# - the second entry of the i-th pair is the multiplicity of the i-th irreducible real G-module
+#   in realModule.
 # The function below computes the values of characters of realModule evaluated on conjugacy classes of G.
 InstallGlobalFunction( OFPRealModuleCharacters, function( realModule, G )
   return List( [1..NrConjugacyClasses( G )],
