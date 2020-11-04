@@ -1,6 +1,6 @@
 # Let G be a group.
 # The function below computes the list MN_one( givenDim, G ) of real G-modules - for the explanation,
-# see my PhD thesis [2], ODNOSNIK. We know that the modules in that list cannot occur at tangent
+# see my PhD thesis [2], p. 44. We know that the modules in that list cannot occur at tangent
 # spaces at fixed point for one fixed point actions of G on spheres of the same dimension (implicitly given).
 # Apart from G, the additional parameters are:
 #	- modulesNotExcludedOdd - list MN_odd( givenDim, G ) of real G-modules of the same dimension (implicitly given),
@@ -36,7 +36,7 @@ end );
 # Let G be a group and realIrreducibles be
 #	the list of the characters of the real irreducible representations of G.
 # The function below computes the rank of the matrix D_G,
-#	for the explanation see my PhD thesis [2], pp. 40 ODNOSNIK.
+#	for the explanation see my PhD thesis [2], pp. 37,38.
 InstallGlobalFunction( OFPRankD, function( G, realIrreducibles, complexEquivalent )
   local D;
   D := List( Filtered( List( ConjugacyClassesSubgroups( G ), cl -> Representative( cl ) ),
