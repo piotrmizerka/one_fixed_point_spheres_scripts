@@ -11,16 +11,6 @@ InstallGlobalFunction( OFPFixedPointDimensionRealModule, function( realModule, H
 end );
 
 # The function below computes the list of real G-modules of dimension dim.
-# It requires additionally the following parameters:
-# - realIrreducibles - the list of the characters of the real irreducible representations of G,
-# - dimensionsRealModules - the set containing the dimensions of the real irreducible
-#		representations of G (saved in a list),
-# - realIrrOfDim - the list conatining real irreducible characters of G of given dimension
-#		(for all dimensions) - when the dimension given, gives all the irreducible characters of this dimension,
-# - realIrrNr - the dictionary containing numbers of irreducible characters of G,
-# - realIrrNrReversed - the dictionary containing irreducible characters of G - once the id of
-#		the character is given, it returns the character.
-# The parameters above are also the ingredients of the output of RealIrreducibles function.
 InstallGlobalFunction( OFPModulesGivenDimension, function( dim, G )
   local summandOccurrencesInGivenPartition, partition, summand, summands, restrictions,
   ir, restup, unorderedTuples, result, multiplicities, tempModule, temp, i, realIrr;
