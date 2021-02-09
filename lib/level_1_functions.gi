@@ -49,7 +49,7 @@ end );
 
 # Let G be a group.
 # The function below computes the record of the following 6 objects:
-# - realIrreducibles -  the list of the characters of the real irreducible representations of G,
+# - realIrreducibles -  the list of the characters of the nontrivial real irreducible representations of G,
 # - dimensionsRealModules - the set containing the dimensions of the real irreducible representations of G
 #		(saved in a list),
 # - realIrrOfDim - the list conatining real irreducible characters of G of given dimension
