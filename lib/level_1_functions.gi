@@ -79,7 +79,7 @@ InstallGlobalFunction( OFPRealIrreducibles, function( G )
     else
       row := List( ConjugacyClasses( G ), cl -> 2*RealPart( Representative( cl )^ir ) );
     fi;
-    if row <> trivialModule then
+    if row <> trivialModule and not (row in realIrreducibles) then
       Add( realIrreducibles, row );
       AddDictionary( complexEquivalent, row, ir );
       realIrrOfDim[row[1]] := [];
