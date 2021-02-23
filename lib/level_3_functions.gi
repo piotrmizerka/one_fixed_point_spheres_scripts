@@ -49,10 +49,25 @@ end );
 
 # Let G be a group.
 # The procedure below (which is not a function in the mathematical sense)
-# displays the fixed point dimensions for sugroups of G acting on real irreducible G-modules.
+# displays the fixed point dimensions for sugroups of G acting on nontrivial real irreducible G-modules.
 InstallGlobalFunction( OFPTableFixedPointDimension, function( G )
-  local cl, ir, i, realIrr, conjugacyClassesSubgroups;
-  Print( "      " );
+  local cl, ir, i, realIrr, conjugacyClassesSubgroups, reprCl;
+  realIrr := OFPRealIrreducibles( G );
+  Print( "\nNontrivial irreducible chcracter table of G = SmallGroup(", IdGroup( G ), ") = ", StructureDescription( G ),"\n\n" );
+  Print( " |g| " );
+  for cl in ConjugacyClasses( G ) do
+    Print( Order( Representative( cl ) ), "  " );
+  od;
+  Print( "\n|(g)| " );
+  for cl in ConjugacyClasses( G ) do
+    Print( Size( cl ), "  " );
+  od;
+  Print( "\n" );
+  for ir in realIrr.realIrreducibles do
+    Print( "X.", LookupDictionary( realIrr.realIrrNr, ir ), " " );
+    Display( ir );
+  od;
+  Print( "\n\nFixed point dimension table for nontrivial real irreducible characters (which are listed above):\n\n      " );
   i := 1;
   conjugacyClassesSubgroups := ConjugacyClassesSubgroups( G );
   for cl in conjugacyClassesSubgroups do
@@ -62,17 +77,17 @@ InstallGlobalFunction( OFPTableFixedPointDimension, function( G )
     fi;
     i := i+1;
   od;
-  Print( "\n\n" );
-  realIrr := OFPRealIrreducibles( G );
+  Print( " ((*) - see the legend below the table)\n\n" );
   for ir in realIrr.realIrreducibles do
     Print( "X.", LookupDictionary( realIrr.realIrrNr, ir ), " " );
     Display( List( ConjugacyClassesSubgroups( G ),
     cl -> OFPFixedPointDimensionRealModule( [[ir,1]], Representative( cl ), G, realIrr.complexEquivalent ) ) );
   od;
-  Print( "\n" );
+  Print( "\nThe legend to (*):\n" );
   i := 1;
   for cl in ConjugacyClassesSubgroups( G ) do
-    Print( i, " = ", StructureDescription( Representative( cl ) ), "\n" );
+    reprCl := Representative( cl );
+    Print( i, " = SmallGroup(", IdGroup( reprCl ), ") = ", StructureDescription( reprCl ), "\n" );
     i := i+1;
   od;
   Print( "\n\n" );
