@@ -5,13 +5,13 @@
 # spaces at fixed point for odd fixed point actions of G on spheres of the same dimension dim.
 # Apart from dim and G, the additional parameters are:
 # - modulesGivenDimension - the list of real G-modules of given (implicitly) dimension,
-# - groupsExcludedOdd - the list of groups (intentionally not admitting one fixed point acgtions on spheres),
+# - groupsExcludedOdd - the list of idies of groups (intentionally not admitting odd fixed point acgtions on spheres),
 # - subgroupTriples - the output of SubgroupTriples( G ).
 InstallGlobalFunction( OFPModulesNotExcludedOdd,
                       function( G, modulesGivenDimension, groupsExcludedOdd, subgroupTriples )
   local realModule, triple, dimH1, dimH2, dimP, H, check, realIrr, rankD, result;
 	for H in OFPIndex2SubgroupsSatisfyingProposition29( G ) do
-		if H in groupsExcludedOdd then
+		if IdGroup( H ) in groupsExcludedOdd then
 			return [];
 		fi;
 	od;
@@ -85,7 +85,7 @@ InstallGlobalFunction( OFPModulesNotExcludedOneOliverGroupsUpToOrder, function( 
       G, modulesGivenDimension[idGroup[1]][idGroup[2]],
       groupsExcludedOdd, subgroupTriples[idGroup[1]][idGroup[2]] );
     if Size( modulesNotExcludedOdd[idGroup[1]][idGroup[2]] ) = 0 then
-      Add( groupsExcludedOdd, G );
+      Add( groupsExcludedOdd, IdGroup( G ) );
     fi;
   od;
   ####################################################################
@@ -120,6 +120,34 @@ InstallGlobalFunction( OFPModulesNotExcludedOneOliverGroupsUpToOrder, function( 
   od;
   ####################################################################
 
+  return rec( modulesNotExcludedOne := modulesNotExcludedOne,
+              modulesNotExcludedOdd := modulesNotExcludedOdd,
+              faithfulModulesNotExcludedOne := faithfulModulesNotExcludedOne,
+              modulesGivenDimension := modulesGivenDimension );
+end );
+
+# Level 5 function.
+# For a given group G computes the list of modules for which
+#	the strategy was not able to exclude one fixed point actions on spheres. It also tells which
+# ones from these modules are faithful and saves them in a separate list.
+# Input:
+# - dim - the dimension of spheres to consider,
+# - G - the group to consider,
+# - groupsExcludedOdd - the list of idies of groups (intentionally not admitting odd fixed point acgtions on spheres).
+# Output is a record consisting of 4 the following lists:
+# - modulesNotExcludedOne - contains all the modules for which the strategy was not able
+#   to exclude one fixed point actions on S^n of G,
+# - modulesNotExcludedOdd - contains all the modules for which the strategy was not able
+#   to exclude actions S^dim of G with odd number of fixed points,
+# - faithfulModulesNotExcludedOne - the sublists of the list above containing faithful modules,
+# - modulesGivenDimension - contains all the characters of nontrivial real G-modules of dimension dim.
+InstallGlobalFunction( OFPModulesNotExcludedOneSpecificGroup, function( dim, G, groupsExcludedOdd )
+  local modulesGivenDimension, subgroupTriples, modulesNotExcludedOdd, modulesNotExcludedOne, faithfulModulesNotExcludedOne;
+  modulesGivenDimension := OFPModulesGivenDimension( dim, G );
+  subgroupTriples := OFPSubgroupTriples( G );
+  modulesNotExcludedOdd := OFPModulesNotExcludedOdd( G, modulesGivenDimension, groupsExcludedOdd, subgroupTriples );
+  modulesNotExcludedOne := OFPModulesNotExcludedOne( G, modulesNotExcludedOdd, subgroupTriples.subgroupTriplesTypeB );
+  faithfulModulesNotExcludedOne := Filtered( modulesNotExcludedOne, notExcludedModule -> OFPIsFaithful( notExcludedModule, G ) );
   return rec( modulesNotExcludedOne := modulesNotExcludedOne,
               modulesNotExcludedOdd := modulesNotExcludedOdd,
               faithfulModulesNotExcludedOne := faithfulModulesNotExcludedOne,
