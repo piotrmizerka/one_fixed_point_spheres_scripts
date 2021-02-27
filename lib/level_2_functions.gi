@@ -14,12 +14,15 @@ end );
 InstallGlobalFunction( OFPModulesGivenDimension, function( dim, G )
   local summandOccurrencesInGivenPartition, partition, summand, summands, restrictions,
   ir, restup, unorderedTuples, result, multiplicities, tempModule, temp, i, realIrr;
+  summandOccurrencesInGivenPartition := [];
   result := [];
   realIrr := OFPRealIrreducibles( G );
   # Consider each partition of dim into summands being the dimensions of nontrivial real irredudcibles
   for partition in RestrictedPartitions( dim, realIrr.dimensionsRealModules ) do
     # Count the numbers of occurences of each summand in the current partition.
-    summandOccurrencesInGivenPartition := List( realIrr.dimensionsRealModules, x -> 0 );
+    for i in realIrr.dimensionsRealModules do
+      summandOccurrencesInGivenPartition[i] := 0;
+    od;
     for summand in partition do
       summandOccurrencesInGivenPartition[summand] := summandOccurrencesInGivenPartition[summand]+1;
     od;
