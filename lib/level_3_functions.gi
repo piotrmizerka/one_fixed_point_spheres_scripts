@@ -92,3 +92,54 @@ InstallGlobalFunction( OFPTableFixedPointDimension, function( G )
   od;
   Print( "\n\n" );
 end );
+
+# Let G be a group.
+# The procedure below (which is not a function in the mathematical sense)
+# displays the fixed point dimensions (over complex numbers) for sugroups of G acting on nontrivial complex irreducible G-modules.
+InstallGlobalFunction( OFPTableFixedPointDimensionComplex, function( G )
+  local cl, ir, i, complexIrr, conjugacyClassesSubgroups, reprCl;
+  complexIrr := Irr( G );
+  complexIrrNr := NewDictionary( [], true );
+  i := 1;
+  for ir in complexIrr do
+    AddDictionary( complexIrrNr, row, i );
+  od;
+  Print( "\nNontrivial irreducible chcracter table of G = SmallGroup(", IdGroup( G ), ") = ", StructureDescription( G ),"\n\n" );
+  Print( " |g| " );
+  for cl in ConjugacyClasses( G ) do
+    Print( Order( Representative( cl ) ), "  " );
+  od;
+  Print( "\n|(g)| " );
+  for cl in ConjugacyClasses( G ) do
+    Print( Size( cl ), "  " );
+  od;
+  Print( "\n" );
+  for ir in complexIrrNr do
+    Print( "X.", LookupDictionary( complexIrrNr, ir ), " " );
+    Display( ir );
+  od;
+  Print( "\n\nFixed point dimension table for nontrivial real irreducible characters (which are listed above):\n\n      " );
+  i := 1;
+  conjugacyClassesSubgroups := ConjugacyClassesSubgroups( G );
+  for cl in conjugacyClassesSubgroups do
+    Print( i );
+    if i < Size( conjugacyClassesSubgroups ) then
+      Print( "  " );
+    fi;
+    i := i+1;
+  od;
+  Print( " ((*) - see the legend below the table)\n\n" );
+  for ir in complexIrrNr do
+    Print( "X.", LookupDictionary( complexIrrNr, ir ), " " );
+    Display( List( ConjugacyClassesSubgroups( G ),
+    cl -> OFPFixedPointDimensionIrr( ir, Representative( cl ), G ) ) );
+  od;
+  Print( "\nThe legend to (*):\n" );
+  i := 1;
+  for cl in ConjugacyClassesSubgroups( G ) do
+    reprCl := Representative( cl );
+    Print( i, " = SmallGroup(", IdGroup( reprCl ), ") = ", StructureDescription( reprCl ), "\n" );
+    i := i+1;
+  od;
+  Print( "\n\n" );
+end );
