@@ -53,7 +53,7 @@ end );
 InstallGlobalFunction( OFPTableFixedPointDimension, function( G )
   local cl, ir, i, realIrr, conjugacyClassesSubgroups, reprCl;
   realIrr := OFPRealIrreducibles( G );
-  Print( "\nNontrivial irreducible chcracter table of G = SmallGroup(", IdGroup( G ), ") = ", StructureDescription( G ),"\n\n" );
+  Print( "\nNontrivial real irreducible character table of G = SmallGroup(", IdGroup( G ), ") = ", StructureDescription( G ),"\n\n" );
   Print( " |g| " );
   for cl in ConjugacyClasses( G ) do
     Print( Order( Representative( cl ) ), "  " );
@@ -87,7 +87,7 @@ InstallGlobalFunction( OFPTableFixedPointDimension, function( G )
   i := 1;
   for cl in ConjugacyClassesSubgroups( G ) do
     reprCl := Representative( cl );
-    Print( i, " = SmallGroup(", IdGroup( reprCl ), ") = ", StructureDescription( reprCl ), "\n" );
+    Print( i, " = SmallGroup(", IdGroup( reprCl ), ") = ", StructureDescription( reprCl ), " number of subgroups in the class = ", Size( cl ), "\n" );
     i := i+1;
   od;
   Print( "\n\n" );
@@ -97,14 +97,15 @@ end );
 # The procedure below (which is not a function in the mathematical sense)
 # displays the fixed point dimensions (over complex numbers) for sugroups of G acting on nontrivial complex irreducible G-modules.
 InstallGlobalFunction( OFPTableFixedPointDimensionComplex, function( G )
-  local cl, ir, i, complexIrr, conjugacyClassesSubgroups, reprCl;
+  local cl, ir, i, complexIrr, complexIrrNr, conjugacyClassesSubgroups, reprCl;
   complexIrr := Irr( G );
   complexIrrNr := NewDictionary( [], true );
   i := 1;
   for ir in complexIrr do
-    AddDictionary( complexIrrNr, row, i );
+    AddDictionary( complexIrrNr, ir, i );
+    i := i+1;
   od;
-  Print( "\nNontrivial irreducible chcracter table of G = SmallGroup(", IdGroup( G ), ") = ", StructureDescription( G ),"\n\n" );
+  Print( "\nNontrivial complex irreducible chcracter table of G = SmallGroup(", IdGroup( G ), ") = ", StructureDescription( G ),"\n\n" );
   Print( " |g| " );
   for cl in ConjugacyClasses( G ) do
     Print( Order( Representative( cl ) ), "  " );
@@ -114,11 +115,11 @@ InstallGlobalFunction( OFPTableFixedPointDimensionComplex, function( G )
     Print( Size( cl ), "  " );
   od;
   Print( "\n" );
-  for ir in complexIrrNr do
+  for ir in complexIrr do
     Print( "X.", LookupDictionary( complexIrrNr, ir ), " " );
-    Display( ir );
+    Display( List( ConjugacyClasses( G ), cl -> Representative( cl )^ir ) );
   od;
-  Print( "\n\nFixed point dimension table for nontrivial real irreducible characters (which are listed above):\n\n      " );
+  Print( "\n\nFixed point dimension table for nontrivial complex irreducible characters (which are listed above):\n\n      " );
   i := 1;
   conjugacyClassesSubgroups := ConjugacyClassesSubgroups( G );
   for cl in conjugacyClassesSubgroups do
@@ -129,16 +130,16 @@ InstallGlobalFunction( OFPTableFixedPointDimensionComplex, function( G )
     i := i+1;
   od;
   Print( " ((*) - see the legend below the table)\n\n" );
-  for ir in complexIrrNr do
+  for ir in complexIrr do
     Print( "X.", LookupDictionary( complexIrrNr, ir ), " " );
     Display( List( ConjugacyClassesSubgroups( G ),
-    cl -> OFPFixedPointDimensionIrr( ir, Representative( cl ), G ) ) );
+    cl -> OFPFixedPointDimensionComplexIrr( ir, Representative( cl ), G ) ) );
   od;
   Print( "\nThe legend to (*):\n" );
   i := 1;
   for cl in ConjugacyClassesSubgroups( G ) do
     reprCl := Representative( cl );
-    Print( i, " = SmallGroup(", IdGroup( reprCl ), ") = ", StructureDescription( reprCl ), "\n" );
+    Print( i, " = SmallGroup(", IdGroup( reprCl ), ") = ", StructureDescription( reprCl ), " number of subgroups in the class = ", Size( cl ), "\n" );
     i := i+1;
   od;
   Print( "\n\n" );
