@@ -1,4 +1,4 @@
-# Replication details for ``TYTUL'' by P. Mizerka and K. Śmietaniak
+# Replication details for *Nonexistence of One-Fixed-Point Actions on Spheres of Direct Products Possessing a Cyclic Group as a Factor*  by P. Mizerka and K. Śmietaniak
 
 This code can be used to replicate the fixed point dimension tables from ``TYTUL'', [ARXIV](ARXIV LINK), more precisely tables TOFILLL from this paper.
 
@@ -19,18 +19,18 @@ LoadPackage("OneFPActions");
 ```
 
 ## Running the actual replication
-In order to obtain tables no UZUPELNIC from our paper, define first (in the GAP session after loading `OneFPActions` package) the groups $\operatorname{SL}(2,5)$, $\operatorname{TL}(2,5)$, and $S_5$ via the following commands:
+In order to obtain tables no UZUPELNIC from our paper, define first (in the GAP session after loading `OneFPActions` package) the groups SL(2,5), TL(2,5), and S_5 via the following commands:
 ```bash
 sl_2_5 := SL(2,5);; tl_2_5 := SmallGroup( 240, 89 );; s_5 := SymmetricGroup(5);;
 ```
 
-Finally, in order to get the complex fixed point dimension tables, run subsequently the following commands:
+Finally, in order to get the fixed point dimension tables, run subsequently the following commands:
 ```bash
-OFPTableFixedPointDimensionComplex( sl_2_5 );
+OFPTableFixedPointDimension( sl_2_5 );
 ```
 ```bash
-OFPTableFixedPointDimensionComplex( tl_2_5 );
+OFPTableFixedPointDimension( tl_2_5 );
 ```
 ```bash
-OFPTableFixedPointDimensionComplex( s_5 );
+OFPTableFixedPointDimension( s_5 );
 ```
