@@ -19,7 +19,7 @@ LoadPackage("OneFPActions");
 ```
 
 ## Running the actual replication
-In order to obtain tables no UZUPELNIC from our paper, define first (in the GAP session after loading `OneFPActions` package) the groups $\operatorname{SL}(2,5)$, $\operatorname{TL}(2,5)$, and $S_5$ via the following commands:
+In order to obtain tables no UZUPELNIC from our paper, define first (in the GAP session after loading `OneFPActions` package) the groups SL(2,5), TL(2,5), and $S_5$ via the following commands:
 ```bash
 sl_2_5 := SL(2,5);; tl_2_5 := SmallGroup( 240, 89 );; s_5 := SymmetricGroup(5);;
 ```
