@@ -53,7 +53,7 @@ end );
 InstallGlobalFunction( OFPTableFixedPointDimension, function( G )
   local cl, ir, i, realIrr, conjugacyClassesSubgroups, reprCl;
   realIrr := OFPRealIrreducibles( G );
-  Print( "\nNontrivial irreducible chcracter table of G = SmallGroup(", IdGroup( G ), ") = ", StructureDescription( G ),"\n\n" );
+  Print( "\nNontrivial real irreducible character table of G = SmallGroup(", IdGroup( G ), ") = ", StructureDescription( G ),"\n\n" );
   Print( " |g| " );
   for cl in ConjugacyClasses( G ) do
     Print( Order( Representative( cl ) ), "  " );
@@ -87,7 +87,7 @@ InstallGlobalFunction( OFPTableFixedPointDimension, function( G )
   i := 1;
   for cl in ConjugacyClassesSubgroups( G ) do
     reprCl := Representative( cl );
-    Print( i, " = SmallGroup(", IdGroup( reprCl ), ") = ", StructureDescription( reprCl ), "\n" );
+    Print( i, " = SmallGroup(", IdGroup( reprCl ), ") = ", StructureDescription( reprCl ), " number of subgroups in the class = ", Size( cl ), "\n" );
     i := i+1;
   od;
   Print( "\n\n" );

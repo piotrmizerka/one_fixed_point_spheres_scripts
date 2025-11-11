@@ -1,13 +1,19 @@
 # Let ir be the irreducible character of a group G (that is, the element of Irr(G)) and H<=G.
+# Suppose V is the irreducible complex G-module with character ir.
+# The function below computes the dimension of the fixed point set V^H.
+InstallGlobalFunction( OFPFixedPointDimensionComplexIrr, function( ir, H, G )
+  local h;
+  return Sum( H, h-> h^ir )/ Order( H );
+end );
+
+# Let ir be the irreducible character of a group G (that is, the element of Irr(G)) and H<=G.
 # Suppose V is the irreducible real G-module with character ir.
 # The function below computes the dimension of the fixed point set V^H.
 InstallGlobalFunction( OFPFixedPointDimensionIrr, function( ir, H, G )
-  local result, h;
-  result := Sum( H, h-> h^ir )/ Order( H );
   if OFPFrobeniusSchurIndicator( ir, G ) <> 1 then
-    return 2*result;
+    return 2*OFPFixedPointDimensionComplexIrr( ir, H, G );
   else
-    return result;
+    return OFPFixedPointDimensionComplexIrr( ir, H, G );
   fi;
 end );
 
