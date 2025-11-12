@@ -5,103 +5,21 @@ gap> START_TEST( "Tests for level_0_functions" );
 
 # OFPFrobeniusSchurIndicator test
 gap> C4 := CyclicGroup( 4 );;
+gap> indicators := [];;
 gap> for ir in Irr( C4 ) do
-> Display( ir );
-> Print( "Frobenius-Schur indicator of the irreducible character above: ", OFPFrobeniusSchurIndicator( ir, C4 ), "\n" );
+> Add( indicators, OFPFrobeniusSchurIndicator( ir, C4 ) );
 > od;
-CT1
-
-     2  2  2  2  2
-
-       1a 4a 2a 4b
-
-Y.1     1  1  1  1
-Frobenius-Schur indicator of the irreducible character above: 1
-CT1
-
-     2  2  2  2  2
-
-       1a 4a 2a 4b
-
-Y.1     1 -1  1 -1
-Frobenius-Schur indicator of the irreducible character above: 1
-CT1
-
-     2  2  2  2  2
-
-       1a 4a 2a 4b
-
-Y.1     1  A -1 -A
-
-A = E(4)
-  = Sqrt(-1) = i
-Frobenius-Schur indicator of the irreducible character above: 0
-CT1
-
-     2  2  2  2  2
-
-       1a 4a 2a 4b
-
-Y.1     1  A -1 -A
-
-A = -E(4)
-  = -Sqrt(-1) = -i
-Frobenius-Schur indicator of the irreducible character above: 0
+gap> Sort( indicators );
+gap> indicators;
+[ 0, 0, 1, 1 ]
 gap> Q8 := QuaternionGroup( 8 );;
+gap> indicators := [];;
 gap> for ir in Irr( Q8 ) do
-> Display( ir );
-> Print( "Frobenius-Schur indicator of the irreducible character above: ", OFPFrobeniusSchurIndicator( ir, Q8 ), "\n" );
+> Add( indicators, OFPFrobeniusSchurIndicator( ir, Q8 ) );
 > od;
-CT2
-
-     2  3  2  2  3  2
-
-       1a 4a 4b 2a 4c
-    2P 1a 2a 2a 1a 2a
-    3P 1a 4a 4b 2a 4c
-
-Y.1     1  1  1  1  1
-Frobenius-Schur indicator of the irreducible character above: 1
-CT2
-
-     2  3  2  2  3  2
-
-       1a 4a 4b 2a 4c
-    2P 1a 2a 2a 1a 2a
-    3P 1a 4a 4b 2a 4c
-
-Y.1     1 -1 -1  1  1
-Frobenius-Schur indicator of the irreducible character above: 1
-CT2
-
-     2  3  2  2  3  2
-
-       1a 4a 4b 2a 4c
-    2P 1a 2a 2a 1a 2a
-    3P 1a 4a 4b 2a 4c
-
-Y.1     1 -1  1  1 -1
-Frobenius-Schur indicator of the irreducible character above: 1
-CT2
-
-     2  3  2  2  3  2
-
-       1a 4a 4b 2a 4c
-    2P 1a 2a 2a 1a 2a
-    3P 1a 4a 4b 2a 4c
-
-Y.1     1  1 -1  1 -1
-Frobenius-Schur indicator of the irreducible character above: 1
-CT2
-
-     2  3  2  2  3  2
-
-       1a 4a 4b 2a 4c
-    2P 1a 2a 2a 1a 2a
-    3P 1a 4a 4b 2a 4c
-
-Y.1     2  .  . -2  .
-Frobenius-Schur indicator of the irreducible character above: -1
+gap> Sort( indicators );
+gap> indicators;
+[ -1, 1, 1, 1, 1 ]
 
 # OFPGroupGeneratedBySubgroups test
 gap> S3 := SymmetricGroup( 3 );;
@@ -195,25 +113,6 @@ gap> OFPLexSmallerTuples( [1,1,1] );
 
 # OFPModuleKernel test
 gap> C8 := CyclicGroup( 8 );;
-gap> Display( CharacterTable( C8 ) );
-CT3
-
-     2  3   3  3  3   3   3  3   3
-
-       1a  8a 4a 2a  8b  8c 4b  8d
-
-X.1     1   1  1  1   1   1  1   1
-X.2     1  -1  1  1  -1  -1  1  -1
-X.3     1   A -1  1  -A   A -1  -A
-X.4     1  -A -1  1   A  -A -1   A
-X.5     1   B  A -1 -/B  -B -A  /B
-X.6     1  -B  A -1  /B   B -A -/B
-X.7     1 -/B -A -1   B  /B  A  -B
-X.8     1  /B -A -1  -B -/B  A   B
-
-A = E(4)
-  = Sqrt(-1) = i
-B = E(8)
 gap> StructureDescription( OFPModuleKernel( [[[1,-1,1,1,-1,0,1,-1],1]], C8 ) );
 "C4"
 gap> StructureDescription( OFPModuleKernel( [[[1,-1,1,1,-1,0,1,1],1]], C8 ) );

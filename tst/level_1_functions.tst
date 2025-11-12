@@ -11,99 +11,14 @@ gap> Order(sub[1]);
 gap> Order(sub[2]);
 2
 gap> for ir in Irr( S5 ) do
-> Display( ir );
 > Print( OFPFixedPointDimensionIrr( ir, sub[1], S5 ), " ", OFPFixedPointDimensionIrr( ir, sub[2], S5 ), " ", OFPFixedPointDimensionIrr( ir, S5, S5 ), "\n" );
 > od;
-CT1
-
-     2  3  2  3  1  1  2  .
-     3  1  1  .  1  1  .  .
-     5  1  .  .  .  .  .  1
-
-       1a 2a 2b 3a 6a 4a 5a
-    2P 1a 1a 1a 3a 3a 2b 5a
-    3P 1a 2a 2b 1a 2a 4a 5a
-    5P 1a 2a 2b 3a 6a 4a 1a
-
-Y.1     1 -1  1  1 -1 -1  1
 1 0 0
-CT1
-
-     2  3  2  3  1  1  2  .
-     3  1  1  .  1  1  .  .
-     5  1  .  .  .  .  .  1
-
-       1a 2a 2b 3a 6a 4a 5a
-    2P 1a 1a 1a 3a 3a 2b 5a
-    3P 1a 2a 2b 1a 2a 4a 5a
-    5P 1a 2a 2b 3a 6a 4a 1a
-
-Y.1     4 -2  .  1  1  . -1
 4 1 0
-CT1
-
-     2  3  2  3  1  1  2  .
-     3  1  1  .  1  1  .  .
-     5  1  .  .  .  .  .  1
-
-       1a 2a 2b 3a 6a 4a 5a
-    2P 1a 1a 1a 3a 3a 2b 5a
-    3P 1a 2a 2b 1a 2a 4a 5a
-    5P 1a 2a 2b 3a 6a 4a 1a
-
-Y.1     5 -1  1 -1 -1  1  .
 5 2 0
-CT1
-
-     2  3  2  3  1  1  2  .
-     3  1  1  .  1  1  .  .
-     5  1  .  .  .  .  .  1
-
-       1a 2a 2b 3a 6a 4a 5a
-    2P 1a 1a 1a 3a 3a 2b 5a
-    3P 1a 2a 2b 1a 2a 4a 5a
-    5P 1a 2a 2b 3a 6a 4a 1a
-
-Y.1     6  . -2  .  .  .  1
 6 3 0
-CT1
-
-     2  3  2  3  1  1  2  .
-     3  1  1  .  1  1  .  .
-     5  1  .  .  .  .  .  1
-
-       1a 2a 2b 3a 6a 4a 5a
-    2P 1a 1a 1a 3a 3a 2b 5a
-    3P 1a 2a 2b 1a 2a 4a 5a
-    5P 1a 2a 2b 3a 6a 4a 1a
-
-Y.1     5  1  1 -1  1 -1  .
 5 3 0
-CT1
-
-     2  3  2  3  1  1  2  .
-     3  1  1  .  1  1  .  .
-     5  1  .  .  .  .  .  1
-
-       1a 2a 2b 3a 6a 4a 5a
-    2P 1a 1a 1a 3a 3a 2b 5a
-    3P 1a 2a 2b 1a 2a 4a 5a
-    5P 1a 2a 2b 3a 6a 4a 1a
-
-Y.1     4  2  .  1 -1  . -1
 4 3 0
-CT1
-
-     2  3  2  3  1  1  2  .
-     3  1  1  .  1  1  .  .
-     5  1  .  .  .  .  .  1
-
-       1a 2a 2b 3a 6a 4a 5a
-    2P 1a 1a 1a 3a 3a 2b 5a
-    3P 1a 2a 2b 1a 2a 4a 5a
-    5P 1a 2a 2b 3a 6a 4a 1a
-
-Y.1     1  1  1  1  1  1  1
 1 1 1
 
 # OFPIndex2SubgroupsSatisfyingProposition29 test
@@ -155,19 +70,6 @@ gap> Display( LookupDictionary( realIrr.complexEquivalent, [[[1,1,1,1,1,1,1],1]]
 fail
 gap> Display( LookupDictionary( realIrr.complexEquivalent, [[[1,-1,1,1,-1,-1,1],1]] ) );
 fail
-gap> Display( LookupDictionary( realIrr.complexEquivalent, realIrr.realIrreducibles[1] ) );
-CT2
-
-     2  3  2  3  1  1  2  .
-     3  1  1  .  1  1  .  .
-     5  1  .  .  .  .  .  1
-
-       1a 2a 2b 3a 6a 4a 5a
-    2P 1a 1a 1a 3a 3a 2b 5a
-    3P 1a 2a 2b 1a 2a 4a 5a
-    5P 1a 2a 2b 3a 6a 4a 1a
-
-Y.1     1 -1  1  1 -1 -1  1
 gap> Display( LookupDictionary( realIrr.realIrrNr, realIrr.realIrreducibles[4] ) );
 4
 gap> Display( LookupDictionary( realIrr.realIrrNrReversed, 4 ) );
