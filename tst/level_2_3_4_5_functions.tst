@@ -197,4 +197,32 @@ The legend to (*):
 9 = SmallGroup([ 60, 5 ]) = A5 number of subgroups in the class = 1
 gap> OFPRankD( A5, realIrr.realIrreducibles, realIrr.complexEquivalent );
 3
+
+# OFPModulesNotExcludedOneOliverGroupsUpToOrder test
+gap> result := OFPModulesNotExcludedOneOliverGroupsUpToOrder( 6, 72 );;
+gap> Size( result.modulesGivenDimension[72][42] );
+37
+gap> Size( result.modulesNotExcludedOdd[72][42] );
+12
+gap> Size( result.modulesNotExcludedOne[72][42] );
+0
+gap> Size( result.faithfulModulesNotExcludedOne[72][42] );
+0
+gap> Size( result.modulesGivenDimension[72][43] );
+49
+gap> Size( result.modulesNotExcludedOdd[72][43] );
+9
+gap> Size( result.modulesNotExcludedOne[72][43] );
+0
+gap> Size( result.faithfulModulesNotExcludedOne[72][43] );
+0
+gap> Size( result.modulesGivenDimension[72][44] );
+36
+gap> Size( result.modulesNotExcludedOdd[72][44] );
+12
+gap> Size( result.modulesNotExcludedOne[72][44] );
+0
+gap> Size( result.faithfulModulesNotExcludedOne[72][44] );
+0
+
 gap> STOP_TEST( "level_2_3_4_5_functions.tst" );
